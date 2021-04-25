@@ -42,7 +42,8 @@ int16_t pi_regulator(float distance, float goal){
 }
 
 static THD_WORKING_AREA(waPiRegulator, 256);
-static THD_FUNCTION(PiRegulator, arg) {
+static THD_FUNCTION(PiRegulator, arg)
+{
 
     chRegSetThreadName(__FUNCTION__);
     (void)arg;
@@ -52,7 +53,8 @@ static THD_FUNCTION(PiRegulator, arg) {
     int16_t speed = 0;
     int16_t speed_correction = 0;
 
-    while(1){
+    while(1)
+    {
         time = chVTGetSystemTime();
         
         //computes the speed to give to the motors
@@ -62,11 +64,13 @@ static THD_FUNCTION(PiRegulator, arg) {
         speed_correction = (get_line_position() - (IMAGE_BUFFER_SIZE/2));
 
         //if the line is nearly in front of the camera, don't rotate
-        if(abs(speed_correction) < ROTATION_THRESHOLD){
+        if(abs(speed_correction) < ROTATION_THRESHOLD)
+        {
         	speed_correction = 0;
         }
 
-        //applies the speed from the PI regulator and the correction for the rotation
+        chprintf((BaseSequentialStream *)&SDU1, "speed = %d\n", speed);
+
 		right_motor_set_speed(speed - ROTATION_COEFF * speed_correction);
 		left_motor_set_speed(speed + ROTATION_COEFF * speed_correction);
 
